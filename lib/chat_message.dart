@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'chat_screen_layout.dart';
 class chat_message extends StatelessWidget {
   const chat_message({super.key, required this.text, required this.sender});
   final String text;
@@ -11,8 +12,10 @@ class chat_message extends StatelessWidget {
           margin: EdgeInsets.only(right: 16,bottom: 5),
           child: CircleAvatar(
             radius: 30,
-            backgroundImage: AssetImage(
+            backgroundImage: sender=='Batman'? AssetImage(
               'images/batman.jpg',
+            ):AssetImage(
+              'images/alfred1.jpg',
             ),
           ),
         ),

@@ -12,6 +12,8 @@ class chat_screen_layouts extends StatefulWidget {
 class _chat_screen_layoutsState extends State<chat_screen_layouts> {
   final TextEditingController send_message_controller=TextEditingController();
   final List<chat_message> _messages =[];
+  List<String> responseList = [];
+
 
   OpenAI? batmanGPT;
 /*
@@ -32,7 +34,7 @@ In the provided code, _subscription is used to store the subscription to a strea
   void initState() {
     // TODO: implement initState
     super.initState();
-    batmanGPT= OpenAI.instance;
+     batmanGPT= OpenAI.instance;
     /*
     The initState() method is called when the stateful widget is inserted into
     the widget tree for the first time.
@@ -70,19 +72,19 @@ In the provided code, _subscription is used to store the subscription to a strea
     return Row(
       children: [
         Expanded(
-            child: TextField(
-              onSubmitted: (value) => send_message(),
-              controller: send_message_controller,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Yes, Master Bruce',
-                contentPadding: EdgeInsets.only(left: 8),
-              ),
+          child: TextField(
+            onSubmitted: (value) => send_message(),
+            controller: send_message_controller,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Yes, Master Bruce',
+              contentPadding: EdgeInsets.only(left: 8),
             ),
+          ),
         ),
         IconButton(
-            onPressed: () =>  send_message(),
-            icon: Icon(Icons.send_outlined),
+          onPressed: () =>  send_message(),
+          icon: Icon(Icons.send_outlined),
         ),
       ],
     );
@@ -94,17 +96,27 @@ In the provided code, _subscription is used to store the subscription to a strea
     });
     send_message_controller.clear();
 
-    final request =CompleteText(prompt: new_messages.text, model:kChatGptTurboModel,maxTokens: 150,  );
+    final request =CompleteText(prompt: new_messages.text, model:TextDavinci3Model(),maxTokens: 150,  );
     _subscription=batmanGPT!.build(token:'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')
-        .onCompletionStream(request: request)
+        .onCompletionSSE(request: request)
         .listen((event) {
-          chat_message ai_message = chat_message(text: event!.choices[0].text, sender:'Alfred');
-          
-          setState(() {
-            _messages.insert(0,ai_message);
-          });
+      String responseText = event.choices[0].text.toString();
+      responseList.add(responseText);
+
+      if (event.choices[0].finishReason != null && event.choices[0].finishReason == 'stop') {
+        String fullResponse = responseList.join('');
+        chat_message ai_message = chat_message(text: fullResponse, sender: 'Alfred');
+
+        setState(() {
+          _messages.insert(0, ai_message);
+        });
+        responseList.clear();
+
+      }
+
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,13 +128,13 @@ In the provided code, _subscription is used to store the subscription to a strea
         child: Column(
           children: [
             Flexible(
-                child:ListView.builder(
-                  reverse: true,
-                  itemCount: _messages.length,
-                  itemBuilder: (context, index) {
-                    return  _messages[index];
-                  },
-                ),
+              child:ListView.builder(
+                reverse: true,
+                itemCount: _messages.length,
+                itemBuilder: (context, index) {
+                  return  _messages[index];
+                },
+              ),
             ),
             Container(
               decoration: BoxDecoration(
