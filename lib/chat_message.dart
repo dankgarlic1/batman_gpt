@@ -26,15 +26,16 @@ class chat_message extends StatelessWidget {
             children: [
               Container(
                 margin: EdgeInsets.only(left: 5,bottom: 5,right: 10,top: 5),
-                padding: EdgeInsets.all(5),
+                padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.lightBlue,
-                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.amber,
+                  borderRadius: BorderRadius.circular(5),
                 ),
                 child: Text(
                   text,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ),

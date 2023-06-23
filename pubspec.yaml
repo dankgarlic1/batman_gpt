@@ -65,6 +65,13 @@ flutter:
     - images/batman.jpg
     - images/alfred1.jpg
     - images/alfred2.jpg
+    - images/bg1.jpg
+    - images/bg2.jpg
+    - images/batwing.jpg
+    - images/batwing1.jpg
+    - images/batman3.png
+    - images/batman2.png
+    - images/batwing2.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -35,6 +35,15 @@ In the provided code, _subscription is used to store the subscription to a strea
     // TODO: implement initState
     super.initState();
      batmanGPT= OpenAI.instance;
+    // String defaultPrompt = "Act like Alfred from Batman. Imitate his personality and responses. Refer to me as Master Bruce.";
+    // chat_message defaultMessage = chat_message(text: defaultPrompt, sender: 'Alfred');
+    // setState(() {
+    //   _messages.insert(0, defaultMessage);
+    // });
+    // // Send default prompt
+    // Future.delayed(Duration.zero, () {
+    //   send_message();
+    // });
     /*
     The initState() method is called when the stateful widget is inserted into
     the widget tree for the first time.
@@ -75,17 +84,37 @@ In the provided code, _subscription is used to store the subscription to a strea
           child: TextField(
             onSubmitted: (value) => send_message(),
             controller: send_message_controller,
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w400,
+            ),
             decoration: InputDecoration(
               border: InputBorder.none,
               hintText: 'Yes, Master Bruce',
+              hintStyle: TextStyle(color: Colors.grey[800],),
               contentPadding: EdgeInsets.only(left: 8),
             ),
           ),
         ),
-        IconButton(
-          onPressed: () =>  send_message(),
-          icon: Icon(Icons.send_outlined),
-        ),
+        InkWell(
+          onTap: () {
+            // Add your desired action when the image button is tapped
+            send_message();
+          },
+          child: Container(
+            width: 40, // Adjust the width and height according to your requirements
+            height: 40,
+            margin: EdgeInsets.only(left: 80),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('images/batwing2.png'),
+                fit: BoxFit.cover,
+              ),
+              shape: BoxShape.circle, // Use BoxShape.rectangle for a rectangular image button
+            ),
+          ),
+        )
+
       ],
     );
   }
@@ -96,6 +125,61 @@ In the provided code, _subscription is used to store the subscription to a strea
     });
     send_message_controller.clear();
 
+    // if (_messages.length == 1) {
+    //   // Set default prompt
+    //   String defaultPrompt = "Welcome, Master Wayne. How can I assist you today?";
+    //   chat_message defaultMessage = chat_message(text: defaultPrompt, sender: 'Alfred');
+    //   setState(() {
+    //     _messages.insert(0, defaultMessage);
+    //   });
+    // }
+
+    /*
+    final request = CompleteText(prompt: new_messages.text, model: TextDavinci3Model(), maxTokens: 150);
+    This creates a CompleteText request with the prompt set to the
+    new_messages.text, which is the user's input message. It also specifies the
+    GPT-3 model to use (TextDavinci3Model()) and sets the maximum number of
+    tokens for the response to 150.
+
+    _subscription = batmanGPT!.build(token: 'YOUR_API_KEY').onCompletionSSE(request: request).listen((event) { ... });
+    This code sets up a subscription to the OpenAI API using the provided API
+    key (YOUR_API_KEY). It uses Server-Sent Events (SSE) to receive responses
+    from the API. It listens for the completion events and executes the callback
+    function when a response is received.
+
+    String responseText = event.choices[0].text.toString();
+    This extracts the text content of the first choice in the response and
+    converts it to a string.
+
+    responseList.add(responseText);
+    This adds the responseText to the responseList that stores the individual
+    responses received.
+
+    if (event.choices[0].finishReason != null && event.choices[0].finishReason == 'stop') { ... }
+    This checks if the finishReason of the first choice in the response is not
+    null and equals 'stop'. This condition is used to determine if the response
+    is complete and no further tokens are expected.
+
+    String fullResponse = responseList.join('');
+    This joins all the individual responses in the responseList into a single
+    string, fullResponse, without any separator.
+
+    chat_message ai_message = chat_message(text: fullResponse, sender: 'Alfred');
+    This creates a chat_message object with the fullResponse as the text content
+     and sets the sender as 'Alfred'.
+
+    setState(() { _messages.insert(0, ai_message); });
+    This updates the state of the widget by inserting the ai_message at the
+    beginning of the _messages list. This triggers a rebuild of the UI to display
+     the new message.
+
+    responseList.clear();
+    This clears the responseList to prepare for the next set of responses.
+    Overall, this code subscribes to the OpenAI API for completion events,
+    processes the received responses, and updates the UI with the combined
+    response when the completion event indicates that the response is complete.
+     */
+
     final request =CompleteText(prompt: new_messages.text, model:TextDavinci3Model(),maxTokens: 150,  );
     _subscription=batmanGPT!.build(token:'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')
         .onCompletionSSE(request: request)
@@ -105,15 +189,14 @@ In the provided code, _subscription is used to store the subscription to a strea
 
       if (event.choices[0].finishReason != null && event.choices[0].finishReason == 'stop') {
         String fullResponse = responseList.join('');
-        chat_message ai_message = chat_message(text: fullResponse, sender: 'Alfred');
-
-        setState(() {
-          _messages.insert(0, ai_message);
-        });
+        if (fullResponse.trim().isNotEmpty) { // Check if the response is not empty
+          chat_message ai_message = chat_message(text: fullResponse, sender: 'Alfred');
+          setState(() {
+            _messages.insert(0, ai_message);
+          });
+        }
         responseList.clear();
-
       }
-
     });
   }
 
@@ -125,24 +208,37 @@ In the provided code, _subscription is used to store the subscription to a strea
         centerTitle: true,
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Flexible(
-              child:ListView.builder(
-                reverse: true,
-                itemCount: _messages.length,
-                itemBuilder: (context, index) {
-                  return  _messages[index];
-                },
-              ),
+        child: Container(
+          decoration: BoxDecoration(
+            image:DecorationImage(
+              fit: BoxFit.cover,
+                image: AssetImage('images/bg2.jpg')
             ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey,
+          ),
+          child: Column(
+            children: [
+              Flexible(
+                child:ListView.builder(
+                  reverse: true,
+                  itemCount: _messages.length,
+                  itemBuilder: (context, index) {
+                    return  _messages[index];
+                  },
+                ),
               ),
-              child: _text_field(),
-            ),
-          ],
+              Container(
+                // margin: EdgeInsets.only(left: 5,right: 5,top: 2,bottom: 2),
+                decoration: BoxDecoration(
+                  color: Colors.amber,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Padding(
+                    padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
+                    child: _text_field(),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
