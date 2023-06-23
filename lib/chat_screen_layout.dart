@@ -1,7 +1,10 @@
+
 import 'dart:async';
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:bataman_gpt/chat_message.dart';
 import 'package:flutter/material.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 class chat_screen_layouts extends StatefulWidget {
   const chat_screen_layouts({super.key});
 
@@ -34,7 +37,7 @@ In the provided code, _subscription is used to store the subscription to a strea
   void initState() {
     // TODO: implement initState
     super.initState();
-     batmanGPT= OpenAI.instance;
+    batmanGPT= OpenAI.instance;
     // String defaultPrompt = "Act like Alfred from Batman. Imitate his personality and responses. Refer to me as Master Bruce.";
     // chat_message defaultMessage = chat_message(text: defaultPrompt, sender: 'Alfred');
     // setState(() {
@@ -211,7 +214,7 @@ In the provided code, _subscription is used to store the subscription to a strea
         child: Container(
           decoration: BoxDecoration(
             image:DecorationImage(
-              fit: BoxFit.cover,
+                fit: BoxFit.cover,
                 image: AssetImage('images/bg2.jpg')
             ),
           ),
@@ -233,8 +236,8 @@ In the provided code, _subscription is used to store the subscription to a strea
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Padding(
-                    padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
-                    child: _text_field(),
+                  padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
+                  child: _text_field(),
                 ),
               ),
             ],
