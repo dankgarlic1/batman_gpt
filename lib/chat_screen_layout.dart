@@ -37,16 +37,16 @@ In the provided code, _subscription is used to store the subscription to a strea
   void initState() {
     // TODO: implement initState
     super.initState();
+    chat_message greeting = chat_message(
+      text: "Welcome, Master Wayne. How can I assist you today?",
+      sender: 'Alfred',
+    );
+
+    setState(() {
+      _messages.insert(0, greeting);
+    });
+
     batmanGPT= OpenAI.instance;
-    // String defaultPrompt = "Act like Alfred from Batman. Imitate his personality and responses. Refer to me as Master Bruce.";
-    // chat_message defaultMessage = chat_message(text: defaultPrompt, sender: 'Alfred');
-    // setState(() {
-    //   _messages.insert(0, defaultMessage);
-    // });
-    // // Send default prompt
-    // Future.delayed(Duration.zero, () {
-    //   send_message();
-    // });
     /*
     The initState() method is called when the stateful widget is inserted into
     the widget tree for the first time.
@@ -84,18 +84,21 @@ In the provided code, _subscription is used to store the subscription to a strea
     return Row(
       children: [
         Expanded(
-          child: TextField(
-            onSubmitted: (value) => send_message(),
-            controller: send_message_controller,
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w400,
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: 'Yes, Master Bruce',
-              hintStyle: TextStyle(color: Colors.grey[800],),
-              contentPadding: EdgeInsets.only(left: 8),
+          child: SingleChildScrollView(
+            child: TextField(
+              maxLines: null,
+              onSubmitted: (value) => send_message(),
+              controller: send_message_controller,
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
+              ),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Yes, Master Bruce',
+                hintStyle: TextStyle(color: Colors.grey[800],),
+                contentPadding: EdgeInsets.only(left: 8),
+              ),
             ),
           ),
         ),
@@ -105,9 +108,9 @@ In the provided code, _subscription is used to store the subscription to a strea
             send_message();
           },
           child: Container(
-            width: 40, // Adjust the width and height according to your requirements
+            width: 40,
             height: 40,
-            margin: EdgeInsets.only(left: 80),
+            margin: EdgeInsets.only(left: 20),
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('images/batwing2.png'),
@@ -127,15 +130,6 @@ In the provided code, _subscription is used to store the subscription to a strea
       _messages.insert(0,new_messages);
     });
     send_message_controller.clear();
-
-    // if (_messages.length == 1) {
-    //   // Set default prompt
-    //   String defaultPrompt = "Welcome, Master Wayne. How can I assist you today?";
-    //   chat_message defaultMessage = chat_message(text: defaultPrompt, sender: 'Alfred');
-    //   setState(() {
-    //     _messages.insert(0, defaultMessage);
-    //   });
-    // }
 
     /*
     final request = CompleteText(prompt: new_messages.text, model: TextDavinci3Model(), maxTokens: 150);
