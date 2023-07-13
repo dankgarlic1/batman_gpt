@@ -178,7 +178,7 @@ In the provided code, _subscription is used to store the subscription to a strea
      */
 
     final request =CompleteText(prompt: new_messages.text, model:TextDavinci3Model(),maxTokens: 150,  );
-    _subscription=batmanGPT!.build(token:'USE YOUR OWN API KEY (: ')
+    _subscription=batmanGPT!.build(token:'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 ')
         .onCompletionSSE(request: request)
         .listen((event) {
       String responseText = event.choices[0].text.toString();
