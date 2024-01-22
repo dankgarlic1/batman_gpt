@@ -126,7 +126,6 @@ In the provided code, _subscription is used to store the subscription to a strea
     );
   }
   void send_message(){
-    print(dotenv.env['PRIVATE_KEY']);
     chat_message new_messages=chat_message(text: send_message_controller.text, sender: 'Batman');
     setState(() {
       _messages.insert(0,new_messages);
