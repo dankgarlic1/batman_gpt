@@ -4,6 +4,7 @@ import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:bataman_gpt/chat_message.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 class chat_screen_layouts extends StatefulWidget {
   const chat_screen_layouts({super.key});
@@ -125,6 +126,7 @@ In the provided code, _subscription is used to store the subscription to a strea
     );
   }
   void send_message(){
+    print(dotenv.env['PRIVATE_KEY']);
     chat_message new_messages=chat_message(text: send_message_controller.text, sender: 'Batman');
     setState(() {
       _messages.insert(0,new_messages);
@@ -177,8 +179,8 @@ In the provided code, _subscription is used to store the subscription to a strea
     response when the completion event indicates that the response is complete.
      */
 
-    final request =CompleteText(prompt: new_messages.text, model:TextDavinci3Model(),maxTokens: 150,  );
-    _subscription=batmanGPT!.build(token:'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 ')
+    final request =CompleteText(prompt: new_messages.text, model:TextDavinci3Model(),maxTokens: 450,  );
+    _subscription=batmanGPT!.build(token:dotenv.env['PRIVATE_KEY'])
         .onCompletionSSE(request: request)
         .listen((event) {
       String responseText = event.choices[0].text.toString();
